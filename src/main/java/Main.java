@@ -120,13 +120,14 @@ public class Main {
 
 
 
-
         //Generation of missing data with interpolation
 
         double time1[] = new double[308];
         for(int x = 0;x < 308; x++){
             time1[x] = x + 64;
         }
+
+
 
         double[] fatday1 = {64,148,232,316,330,353,371};
         double[] fat1 = {9.05,4.34,3.06,6.86,9.58,11.38,13.73};
@@ -135,9 +136,73 @@ public class Main {
         double[] fat = {9.05,9.05,4.34,3.06,6.86,9.58,11.38,13.73};
 
 
-        for (double timepoint: time1){
+        double[] yfat1 = new double[308];
 
-            System.out.println(helper.linearInterp(fatday1,fat1,timepoint));
+        for (int x = 0; x < time1.length;x++){
+            yfat1[x] = helper.linearInterp(fatday1,fat1,time1[x]);
+
+        }
+
+        double[] yfat = new double[371];
+        for(int x = 0; x <371 ; x++){
+            if(x < 64){
+                yfat[x] = yfat1[0];
+            }
+            else {
+                yfat[x] = yfat1[x - 64];
+            }
+        }
+
+
+        //Checking yfat
+//
+//        for(int x = 0; x < yfat.length;x++){
+//            System.out.println("Index - " + x + " number - " + yfat[x]);
+//        }
+
+
+        double[] WKGram1 = {67.608,55.783,51.692,58.158,64.467,69.698,70.824};
+        double[] WKGday1 = {64,148,232,316,330,353,371};
+
+        double[] yw1 = new double[308];
+
+        for (int x = 0; x < time1.length;x++){
+            yw1[x] = helper.linearInterp(WKGday1,WKGram1,time1[x]);
+
+        }
+
+        double[] yw = new double[371];
+        for(int x = 0; x <371 ; x++){
+            if(x < 64){
+                yw[x] = yw1[0];
+            }
+            else {
+                yw[x] = yw1[x - 64];
+            }
+        }
+
+//        Checking yw
+//
+//        for(int x = 0; x < yw.length;x++){
+//            System.out.println("Index - " + x + " number - " + yw[x]);
+//        }
+
+
+        //Measured fat trajectory grams
+        for(int x = 0;x <yfatg.length;x++){
+            yfatg[x] = yfat[x] * 1000.;
+
+        }
+
+        //Measured lean mass trajectory grams
+        for(int x = 0;x <yleang.length;x++){
+            yleang[x] = 1000 * (yw[x] - yfat[x]);
+
+        }
+
+        //Measured weight trajectory grams
+        for(int x = 0;x <ywg.length;x++){
+            ywg[x] = yw[x] * 1000.;
 
         }
 
@@ -147,21 +212,10 @@ public class Main {
 
 
 
-//
-//        double[] x = { 0, 50, 100 };
-//        double[] y = { 0, 50, 200 };
-//
-//        LinearInterpolator interp = new LinearInterpolator();
-//        PolynomialSplineFunction f = interp.interpolate(x, y);
-//
-////        System.out.println("Piecewise functions:");
-////        Arrays.stream(f.getPolynomials()).forEach(System.out::println);
-//
-//        System.out.println(f.getPolynomials().length);
-//
-//        double value = f.value(70);
-//        System.out.println("y for xi = 70: " + value);
-//
+
+
+
+
 
 
 
