@@ -238,7 +238,22 @@ public class Main {
 
 
 
+        //GENERATING measured protein mass nP DATA
 
+        double BWb = ywg[0];
+        double Fb = yfatg[0];
+        double BM = 0.04 * BWb;
+        double ECWb = ECW[0];
+        double ECPb = 0.732 * BM + 0.01087 * ECWb;
+
+        double P1 = 10661.0;
+        double gLP = P1 / (yleang[0] - BM - ECPb - ECW1);
+        P1 = gLP * (yleang[0] - BM - ECPb - ECW1);
+
+        double[] nP = new double[371];
+        for(int x = 0; x<yleang.length;x++){
+            nP[x] = gLP * (yleang[x] - BM - ECPb - ECW1);
+        }
 
 
 
