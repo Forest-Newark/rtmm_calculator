@@ -223,6 +223,18 @@ public class Main {
         }
 
 
+        //GENERATING ECW DATA//
+
+        double ECW1 =  11109.0;
+        double gW = 0.191;
+        double ECW0 = 1000 * ( (gW * yw[0]) + (.0957 * height) + (.025 * age) - 12.424);
+        double cECW0 = ECW1 - ECW0;
+
+
+        double[] ECW = new double[371];
+        for(int x = 0; x < yw.length;x++){
+            ECW[0] = 1000 * ( (gW * yw[x]) + (.0957 * height) + (.025 * age) - 12.424) + cECW0;
+        }
 
 
 
