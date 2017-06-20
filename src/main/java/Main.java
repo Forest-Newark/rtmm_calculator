@@ -207,6 +207,27 @@ public class Main {
         }
 
 
+        //GENERATING RMR DATA//
+
+        double RMR1 = 1591.7;
+        double height =172.0;
+        double age = 35.0;
+        double BMR0 = (10 * yw[0]) + (6.25 * height) - (5 * age);
+        double cBMR0 = RMR1 - BMR0;
+
+
+        //** double check that this should be an array of doubles and not a single value...
+        double[] RMR = new double[371];
+        for(int x = 0; x < yw.length;x++){
+            RMR[x] = BMR0 = (10 * yw[x]) + (6.25 * height) - (5 * age) + cBMR0;
+        }
+
+
+
+
+
+
+
 
 
 
