@@ -1,11 +1,16 @@
+import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+
+import java.util.Arrays;
+
 /**
  * Created by Forest on 6/19/17.
  */
+
+//https://stackoverflow.com/questions/36523396/interpolate-function-using-apache-commons-math/36523685
+
+
 public class Main {
-
-
-
-
 
 
     public static void main(String[] args) {
@@ -95,14 +100,68 @@ public class Main {
 
         int days = 371;
 
+
         int[] time = new int[371];
-
-
         //populate "time" with 1 - 371
         for(int x = 0; x < 371; x++){
 
             time[x] = x+1;
         }
+
+
+        //daily measured weight in grams
+        double[] ywg = new double[371];
+
+        //daily measured lean body mass
+        double[] yleang = new double[371];
+
+        //daily measured lean fat
+        double[] yfatg = new double[371];
+
+
+
+
+        //Generation of missing data with interpolation
+
+        double time1[] = new double[308];
+        for(int x = 0;x < 308; x++){
+            time1[x] = x + 64;
+        }
+
+        double[] fatday1 = {64,148,232,316,330,353,371};
+        double[] fat1 = {9.05,4.34,3.06,6.86,9.58,11.38,13.73};
+
+        double[] fatday = {0,64,148,232,316,330,353,371};
+        double[] fat = {9.05,9.05,4.34,3.06,6.86,9.58,11.38,13.73};
+
+
+        for (double timepoint: time1){
+
+            System.out.println(helper.linearInterp(fatday1,fat1,timepoint));
+
+        }
+
+
+
+
+
+
+
+//
+//        double[] x = { 0, 50, 100 };
+//        double[] y = { 0, 50, 200 };
+//
+//        LinearInterpolator interp = new LinearInterpolator();
+//        PolynomialSplineFunction f = interp.interpolate(x, y);
+//
+////        System.out.println("Piecewise functions:");
+////        Arrays.stream(f.getPolynomials()).forEach(System.out::println);
+//
+//        System.out.println(f.getPolynomials().length);
+//
+//        double value = f.value(70);
+//        System.out.println("y for xi = 70: " + value);
+//
 
 
 
@@ -112,4 +171,8 @@ public class Main {
 
 
     }
+
+
+
+
 }
