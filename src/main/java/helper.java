@@ -1,12 +1,13 @@
-import org.apache.commons.math3.analysis.interpolation.HermiteInterpolator;
-import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
-import org.apache.commons.math3.analysis.interpolation.SmoothingPolynomialBicubicSplineInterpolator;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.interpolation.*;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
 /**
  * Created by Forest on 6/19/17.
  */
+
+//
 public class helper {
 
     public static double linearInterp(double[] x, double[] y, double xi) {
@@ -19,12 +20,18 @@ public class helper {
         return yi;
     }
 
-    public static double Hermite(double[] x, double[] y, double xi){
 
-        HermiteInterpolator interpolator = new HermiteInterpolator();
+    public static double univariateInterpolator(double[] x, double[] y, double xi){
 
-        return 0.0;
+        double xPoints[] = x;
+        double yPoints[] = y;
+        UnivariateInterpolator interpolator = new SplineInterpolator();
+        UnivariateFunction function = interpolator.interpolate(xPoints, yPoints);
+        double interpolatedY = function.value(xi);
+        return interpolatedY;
+
     }
+
 
 
 

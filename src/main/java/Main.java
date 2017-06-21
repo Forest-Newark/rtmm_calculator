@@ -1,6 +1,7 @@
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
+import java.net.ProtocolException;
 import java.util.Arrays;
 
 /**
@@ -102,6 +103,8 @@ public class Main {
 
 
         int[] time = new int[371];
+
+
         //populate "time" with 1 - 371
         for(int x = 0; x < 371; x++){
 
@@ -139,9 +142,10 @@ public class Main {
         double[] yfat1 = new double[308];
 
         for (int x = 0; x < time1.length;x++){
-            yfat1[x] = helper.linearInterp(fatday1,fat1,time1[x]);
+            yfat1[x] = helper.univariateInterpolator(fatday1,fat1,time1[x]);
 
         }
+
 
         double[] yfat = new double[371];
         for(int x = 0; x <371 ; x++){
@@ -167,9 +171,12 @@ public class Main {
         double[] yw1 = new double[308];
 
         for (int x = 0; x < time1.length;x++){
-            yw1[x] = helper.linearInterp(WKGday1,WKGram1,time1[x]);
+            yw1[x] = helper.univariateInterpolator(WKGday1,WKGram1,time1[x]);
 
         }
+
+
+
 
         double[] yw = new double[371];
         for(int x = 0; x <371 ; x++){
@@ -254,6 +261,173 @@ public class Main {
         for(int x = 0; x<yleang.length;x++){
             nP[x] = gLP * (yleang[x] - BM - ECPb - ECW1);
         }
+
+        //DATA FROM EXCEL FILE Minnesota_Data_Hall2.xlsx
+
+        double [] pae = {1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.54, 1750.47, 1750.31, 1750.07, 1749.75, 1749.39, 1748.97, 1748.52, 1748.08, 1747.7, 1747.36, 1747.06, 1746.79, 1746.53, 1746.3, 1746.29, 1746.62, 1747.19, 1747.78, 1748.37, 1748.96, 1749.54, 1707.1, 1639.94, 1585.56, 1539.62, 1499.85, 1464.93, 1433.98, 1406.33, 1381.48, 1359, 1338.55, 1319.85, 1302.65, 1286.74, 1271.93, 1258.06, 1245.02, 1232.69, 1220.97, 1209.8, 1199.1, 1188.79, 1178.8, 1169.12, 1159.69, 1150.49, 1141.5, 1132.69, 1124.17, 1115.99, 1108.1, 1100.45, 1093, 1085.74, 1078.63, 1071.55, 1064.42, 1057.25, 1050.08, 1042.92, 1035.77, 1028.63, 1021.57, 1014.6, 1007.73, 1000.92, 994.189, 987.517, 980.902, 974.37, 967.933, 961.577, 955.294, 949.078, 942.924, 936.826, 930.758, 924.7, 918.66, 912.642, 906.649, 900.681, 894.741, 888.745, 882.644, 876.472, 870.251, 863.994, 857.712, 851.414, 845.085, 838.716, 832.322, 825.912, 819.493, 813.072, 806.652, 800.121, 793.412, 786.576, 779.643, 772.637, 765.574, 758.468, 751.56, 744.995, 738.69, 732.592, 726.667, 720.892, 715.245, 709.594, 703.856, 698.067, 692.247, 686.409, 680.56, 674.707, 668.8, 662.811, 656.764, 650.678, 644.562, 638.427, 632.28, 626.254, 620.43, 614.761, 609.219, 603.784, 598.442, 593.181, 588.071, 583.15, 578.38, 573.737, 569.202, 564.76, 560.401, 555.961, 551.341, 546.595, 541.757, 536.847, 531.883, 526.878, 521.967, 517.238, 512.643, 508.158, 503.763, 499.445, 495.194, 490.987, 486.807, 482.655, 478.529, 474.428, 470.35, 466.293, 462.255, 458.233, 454.226, 450.235, 446.258, 442.294, 438.343, 434.337, 430.235, 426.064, 421.843, 417.581, 413.29, 408.974, 404.726, 400.6, 396.564, 392.6, 388.694, 384.836, 381.019, 377.264, 373.582, 369.958, 366.379, 362.839, 359.33, 355.847, 366.167, 379.801, 391.639, 402.364, 412.331, 421.739, 430.711, 439.326, 447.645, 455.711, 463.56, 471.222, 478.722, 486.081, 493.317, 500.447, 507.484, 514.44, 521.326, 528.152, 534.924, 541.651, 548.339, 554.992, 561.616, 568.216, 574.793, 581.352, 587.896, 594.426, 600.946, 607.455, 613.957, 620.453, 626.943, 633.428, 639.91, 646.389, 652.865, 659.34, 665.813, 672.285, 685.416, 703.04, 718.47, 732.546, 745.69, 758.137, 770.026, 781.454, 792.49, 803.189, 813.597, 823.751, 833.684, 843.424, 852.996, 862.422, 871.719, 880.904, 889.992, 898.995, 907.924, 916.787, 925.594, 934.352, 943.067, 951.744, 960.387, 969.002, 982.086, 998.057, 1012.44, 1025.87, 1038.66, 1050.96, 1062.88, 1074.49, 1085.82, 1096.93, 1107.83, 1118.55, 1129.12, 1139.55, 1151.5, 1164.35, 1177.76, 1191.68, 1206.09, 1220.98, 1236.37, 1252.16, 1268.15, 1284.3, 1300.59, 1317.06, 1333.71, 1350.56, 1366.48, 1380.99, 1394.64, 1407.68, 1420.22, 1432.33, 1444.01, 1456.73, 1470.99, 1485.98, 1501.36, 1516.94, 1532.68, 1548.53, 1563.44, 1577.14, 1590.26, 1603.04, 1615.6, 1627.97, 1640.18, 1651.78, 1662.63, 1672.93, 1682.78, 1692.22, 1701.26, 1709.93, 1718.88, 1728.31, 1737.83, 1747.28, 1756.6, 1765.75, 1774.69, 1783.51, 1792.31, 1801.11, 1809.89, 1818.66, 1827.4, 1836.12};
+
+        double[] time_ = {0, 7, 14, 21, 28, 35, 42, 49, 56, 63, 64, 70, 77, 84, 91, 98, 105, 112, 119, 126, 133, 140, 147, 154, 161, 168, 175, 182, 189, 196, 203, 210, 217, 224, 231, 232, 238, 245, 252, 259, 266, 273, 274, 280, 287, 294, 301, 302, 308, 315, 322, 329, 336, 343, 350, 357, 364, 371};
+        double[] CI_= {1811.51, 1811.51, 1811.51, 1811.51, 1811.51, 1811.51, 1811.51, 1800.87, 1799.82, 1833.85, 1117.49, 1117.49, 1117.49, 1112.78, 1102.59, 1129.3, 1120.14, 1126.91, 1142.58, 1149.61, 1126.84, 1095.69, 1018.68, 1036.09, 1003.07, 945.148, 948.308, 990.685, 951.34, 984.493, 1008.49, 1031.45, 1007.97, 1047.44, 1108.66, 1671.76, 1671.76, 1671.76, 1671.76, 1671.76, 1671.76, 1671.76, 2050.53, 2050.53, 2050.53, 2050.53, 2050.53, 2257.02, 2257.02, 2257.02, 2442.57, 2715.02, 2337.5, 2846.34, 2668.86, 2257.47, 2246.94, 2217.49} ;
+        double[] FI_ = {1332.52, 1332.52, 1332.52, 1332.52, 1332.52, 1332.52, 1332.52, 1324.69, 1323.92, 1348.96, 300.098, 300.098, 300.098, 299.581, 298.462, 301.394, 300.388, 301.132, 302.853, 303.625, 301.125, 297.704, 289.246, 291.159, 287.532, 281.171, 281.518, 286.172, 281.851, 285.492, 288.127, 290.649, 288.07, 292.405, 299.128, 480.488, 480.488, 480.488, 480.488, 480.488, 480.488, 480.488, 721.747, 721.747, 721.747, 721.747, 721.747, 811.948, 811.948, 811.948, 2019.82, 2355.34, 2067.59, 1728.89, 1621.09, 1371.2, 1067.48, 1053.49} ;
+        double[] PI_ = {457.38, 457.38, 457.38, 457.38, 457.38, 457.38, 457.38, 454.692, 454.427, 463.021, 209.461, 209.461, 207.25, 206.392, 204.536, 209.4, 207.732, 208.965, 211.821, 213.102, 208.954, 203.279, 189.249, 192.421, 186.406, 175.854, 176.43, 184.15, 176.982, 183.021, 187.393, 191.576, 187.298, 194.49, 205.64, 306.499, 306.499, 306.499, 306.499, 306.499, 306.499, 306.499, 403.69, 403.69, 403.69, 403.69, 403.69, 458.198, 458.198, 458.198, 756.779, 841.193, 687.499, 695.772, 652.388, 551.826, 418.035, 412.557};
+
+        //Generate missing data of above
+
+        double[] CI = new double[time.length];
+
+        for (int x = 0; x < time.length;x++){
+            CI[x] = helper.univariateInterpolator(time_,CI_,time[x]);
+
+        }
+
+        double[] FI = new double[time.length];
+
+        for (int x = 0; x < time.length;x++){
+            FI[x] = helper.univariateInterpolator(time_,FI_,time[x]);
+
+        }
+
+        double[] PI = new double[time.length];
+
+        for (int x = 0; x < time.length;x++){
+            PI[x] = helper.univariateInterpolator(time_,PI_,time[x]);
+
+        }
+
+
+        //Adjustments for Thermic Effect of Feeding TEF
+
+        double[] mCI = new double[CI.length];
+
+        for(int x = 0; x < CI.length;x++){
+            mCI[x] = Digest_C*(1 - alfaC) * CI[x];
+        }
+
+        double[] mFI = new double[FI.length];
+
+        for(int x = 0; x < FI.length;x++){
+            mFI[x] = Digest_F*(1 - alfaF) * FI[x];
+        }
+
+
+        double[] mPI = new double[PI.length];
+
+        for(int x = 0; x < PI.length;x++){
+            mPI[x] = Digest_P*(1 - alfaP) * PI[x];
+        }
+
+
+        //Initial/Baseline value calculations
+
+        double Lb = BWb - Fb;
+       //Two calculations done above... "Extraceullar water" & "extracellular protein mass
+
+        //baseline protein mass
+        double Pb = P1;
+
+        //baseline fat intake
+        double mFIb = mFI[0];
+
+        //baseline carbohydrate intake
+        double mCIb = mCI[0];
+
+        //baseline protein inake
+        double mPIb = mPI[0];
+
+        //adaptive thermogeneises dimensionless
+        double T = 0;
+
+        //metabolizible energy intake in Kcal
+        double MEIb = mFIb + mCIb + mPIb;
+
+        //physical activity expenditure at steady state
+        double PAEb = pae[0];
+
+        //De novo lipogenesis at steady state
+        double sigmab = mCIb / (1 + Math.pow(2,4));
+
+        //Net gluconeogenesis from amino acids at steady state
+        double GNGPb = 100;
+
+        double day = 1;
+
+        //total energy expenditure at baseline
+        double TEEb = MEIb;
+
+        //daily PAE
+        double[] PAE = pae;
+
+        //new corrected PAE
+        PAEb = PAE[0];
+
+        for (int x=0; x < 64;x++){
+            PAE[x] = PAEb;
+        }
+
+        //calculation of the bias value dEc
+        double dEc = RMR[0] + PAE[0] - TEEb;
+
+        //calculation of total energy expenditure
+        double[] TEE = new double[RMR.length];
+        for (int x = 0;x < RMR.length;x++){
+            TEE[x] = RMR[x] -dEc + PAE[x];
+        }
+
+        //Protein Oxidation at baseline
+        double ProtOxb = mPIb - GNGPb;
+
+        //Non-protein energy expenditure
+        double Enpb = TEEb - ProtOxb;
+
+        //Protein burning energy expenditure
+        double Epb = ProtOxb;
+
+        double FatOxb = rFFA * mFIb + sigmab;
+
+        double CarbOxb = Enpb - FatOxb;
+
+        double Abb = 10400;
+
+        double Bbb = Lb - Abb * Math.log(Fb);
+
+        //Initial R ratio adjusted
+        double Ro = (RoF * TEEb - FatOxb * RoF) / (RoL * FatOxb);
+
+        //Initial R ratio unadjusted
+        double Ab = Ro * Fb;
+
+        double rr = Ro;
+
+        double fFb = FatOxb/Enpb;
+
+        double[][] IBC = {{1,rGF,1},{0,rFFA,0},{0,0,1}};
+
+        double[][] OBC = {{-(1-fFb),0,-1},{0,-fFb,0},{0,0.-1}};
+
+        //TODO: double check this matrix setup...
+        double[][] EI = {{mCIb},{mFIb},{mPIb}};
+
+        double[][] EE = {{Enpb},{Enpb},{Epb}};
+
+        double[][] ZBC = {{-sigmab},{sigmab},{-GNGPb}};
+
+        double[][] RoB = {{RoL,rG-RoF,0},{0,RoF-rG,0},{0,0,RoP}};
+
+        //Total energy balance
+        double EBb = mCIb + mFIb + mPIb + TEEb;
+
+        //Vector variables initial values
+
+
+
+
+
+
+
+
+
+
+
 
 
 
