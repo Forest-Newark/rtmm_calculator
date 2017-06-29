@@ -15,6 +15,19 @@
             <artifactId>commons-math3</artifactId>
             <version>3.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.googlecode.efficient-java-matrix-library/ejml -->
+        <dependency>
+            <groupId>com.googlecode.efficient-java-matrix-library</groupId>
+            <artifactId>ejml</artifactId>
+            <version>0.25</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.ejml/core -->
+        <dependency>
+            <groupId>org.ejml</groupId>
+            <artifactId>core</artifactId>
+            <version>0.30</version>
+        </dependency>
 
     </dependencies>
 

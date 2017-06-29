@@ -1,7 +1,6 @@
-import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
-import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
-import java.net.ProtocolException;
+import org.ejml.*;
+
 import java.util.Arrays;
 
 /**
@@ -15,6 +14,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+
 
 
     /*
@@ -91,19 +91,15 @@ public class Main {
         final  double rGF = 1 - rFFA;
 
         //for reach gram of fat 2.32 Kcal carbohydrate energy is needed
-        final  double fs = 2.32;
+        double fs = 2.32;
 
         //Identity matrix
-        int [][] I_ = new int[][] {{1,0,0},{0,1,0},{0,0,1}};
-
-
+        double[][] I_ = {{1,0,0},{0,1,0},{0,0,1}};
 
 
         int days = 371;
 
-
         int[] time = new int[371];
-
 
         //populate "time" with 1 - 371
         for(int x = 0; x < 371; x++){
@@ -402,14 +398,47 @@ public class Main {
 
         double[][] IBC = {{1,rGF,1},{0,rFFA,0},{0,0,1}};
 
-        double[][] OBC = {{-(1-fFb),0,-1},{0,-fFb,0},{0,0.-1}};
+        //double[][] OBC = {{-(1-fFb),0,-1},{0,-fFb,0},{0,0.-1}};
+        double[][] OBC = new double[3][3];
+        OBC[0][0] = -(1-fFb);
+        OBC[0][1] = 0;
+        OBC[0][2] = -1;
+
+        OBC[1][0] = 0;
+        OBC[1][1] = -(1-fFb);
+        OBC[1][2] = 0;
+
+        OBC[2][0] = 0;
+        OBC[2][1] = 0;
+        OBC[2][2] = -1;
+
+
+
+
+
 
         //TODO: double check this matrix setup...
-        double[][] EI = {{mCIb},{mFIb},{mPIb}};
+        //double[][] EI = {{mCIb},{mFIb},{mPIb}};
+        double[][] EI = new double[3][371];
+        EI[0][0] = mCIb;
+        EI[1][0] = mFIb;
+        EI[2][0] = mPIb;
 
-        double[][] EE = {{Enpb},{Enpb},{Epb}};
 
-        double[][] ZBC = {{-sigmab},{sigmab},{-GNGPb}};
+        //double[][] EE = {{Enpb},{Enpb},{Epb}};
+        double[][] EE = new double[3][371];
+        EE[0][0] = Enpb;
+        EE[1][0] = Enpb;
+        EE[2][0] = Epb;
+
+
+        //double[][] ZBC = {{-sigmab},{sigmab},{-GNGPb}};
+        double[][] ZBC = new double[3][371];
+        ZBC[0][0] = -sigmab;
+        ZBC[1][0] = sigmab;
+        ZBC[2][0] = -GNGPb;
+
+
 
         double[][] RoB = {{RoL,rG-RoF,0},{0,RoF-rG,0},{0,0,RoP}};
 
@@ -418,31 +447,280 @@ public class Main {
 
         //Vector variables initial values
 
+        double[] CarbOx = new double[371];
+        for (int x = 0; x < 371; x++){
+            CarbOx[x] = CarbOxb;
+        }
+
+        double[] FatOx = new double[371];
+        for (int x = 0; x < 371; x++){
+            FatOx[x] = FatOxb;
+        }
+
+        double[] ProtOx = new double[371];
+        for (int x = 0; x < 371; x++){
+            ProtOx[x] = ProtOxb;
+        }
+
+        double[] EB = new double[371];
+        for (int x = 0; x < 371; x++){
+            EB[x] = EBb;
+        }
+
+        double[] AAk = new double[371];
+        for (int x = 0; x < 371; x++){
+            AAk[x] = RoL;
+        }
+
+        double[] BBk = new double[371];
+        for (int x = 0; x < 371; x++){
+            BBk[x] = RoF;
+        }
+
+        double[] RLek = new double[371];
+        for (int x = 0; x < 371; x++){
+            RLek[x] = RoL;
+        }
+
+        double[] OK = new double[371];
+        for (int x = 0; x < 371; x++){
+            OK[x] = Bbb;
+        }
+
+        double[] ACK = new double[371];
+        for (int x = 0; x < 371; x++){
+            ACK[x] = Abb;
+        }
+
+        double[] F = new double[371];
+        for (int x = 0; x < 371; x++){
+            F[x] = Fb;
+        }
+
+        double[] zF = new double[371];
+        for (int x = 0; x < 371; x++){
+            zF[x] = Fb;
+        }
+
+        double[] L = new double[371];
+        for (int x = 0; x < 371; x++){
+            L[x] = Lb;
+        }
+
+        double[] zL = new double[371];
+        for (int x = 0; x < 371; x++){
+            zL[x] = Lb;
+        }
+
+        double[] P = new double[371];
+        for (int x = 0; x < 371; x++){
+            P[x] = Pb;
+        }
+
+        double[] zP = new double[371];
+        for (int x = 0; x < 371; x++){
+            zP[x] = Pb;
+        }
+
+        double[] RR = new double[371];
+        for (int x = 0; x < 371; x++){
+            RR[x] = Ro;
+        }
+
+        double[] mR = new double[371];
+        for (int x = 0; x < 371; x++){
+            mR[x] = Ro;
+        }
+
+        double[] DDL = new double[371];
+
+        double[] DDF = new double[371];
+
+        double[] DDP = new double[371];
+
+        double[] DDE = new double[371];
+
+        double[] zDDL = new double[371];
+
+        double[] zDDF = new double[371];
+
+        double[] zDDP = new double[371];
+
+        double[] zDDE = new double[371];
+
+        double[] zCI = new double[371];
+        for (int x = 0; x < 371; x++){
+            zCI[x] = mCIb;
+        }
+
+        double[] zFI = new double[371];
+        for (int x = 0; x < 371; x++){
+            zFI[x] = mFIb;
+        }
+
+        double[] zPI = new double[371];
+        for (int x = 0; x < 371; x++){
+            zPI[x] = mPIb;
+        }
 
 
+        //Filter initiations
+
+        double[][] QBC = {{100,0,0},{0,100,0},{0,0,1}};
+        double[][] RBC = {{100,0,0},{0,100,0},{0,0,1}};
+
+        double[][] aPBC = QBC;
+        double[][] pPBC = aPBC;
+
+        double[][] S2 = {{0},{0},{0}};
+        double[][] zdeltaBCC = {{0},{0},{0}};
+
+         T = 0.0;
+
+         double AT = 0.0;
+
+         double zdeltaFat = 0.0;
+
+         double pRLe = RoL;
+         double aRLe = RoL;
+         double rFs = RoF;
+         double aPRLe = 1;
+         double pPRLe = 1;
+         double QRLe = 1;
+         double RRLe = 1;
+         double sigmak = sigmab;
+         double omegak = 0;
+         double Ack = Abb;
+         double Ok = Bbb;
+         double [][] pTAck = {{Ack},{Ok}};
+         double [][] aPAck = {{100,0},{0,1}};
+         double [][] pABk = {{RoL},{RoF}};
+         double [][] aPABk = {{100,0},{0,1}};
+         double [][] pPABk = {{100,0},{0,1}};
+
+        //Forward Calculations
+
+        // fill with days 2 - 371
 
 
+        //Calculations of gluconeogenesis from protien
+
+        double GNGCIo = (-0.5 * 100.0) / mCIb;
+        double GNGPIo = (0.3 * 100.0) / mPIb;
+        double GNGPo = 100.0/Pb;
+        double GNGO = 20;
 
 
+        //ANABOLIC vs KATABOLIC process
+
+        //Fuck it we are doing it live...
+
+        //INITIALIZE THE SHIT HERE
+
+        //TODO: I changed them from 370 to 371 to match everything else.. lets see what that does
+        double[] iFI = new double[371];
+        double[] iCI = new double[371];
+        double[] iPI = new double[371];
+
+        //TODO: EI_ could be initiaalized after the loop...
+
+        double[] PP = new double[371];
+        double[] GNGP_ = new double[371];
 
 
+        double[] TOTEE = new double[371];
+        double[] eb = new double [371];
+
+        double[] aDL = new double[371];
+        double[] aDF = new double[371];
+        double[] aDP = new double[371];
+        double[] Ep = new double[371];
+
+        double[] Enp = new double [371];
+        double[] wfatOx = new double [371];
+        double[] wcarbOx = new double[371];
+
+        double[][] wOx_ = new double[3][371];
+        double[] fF = new double[371];
+
+        double[][] S1 = new double[3][371];
 
 
+        //TODO: I NEED TO RETHINK X= 2 I DONT KNOW ITS CORRECT CUZ I AM DUMB>>>>
+
+        for(int x = 0; x < days;x++){
+           iFI[x] = mFI[x];
+           iCI[x] = mCI[x];
+           iPI[x] = mPI[x];
+           //this line of code is strange.. indexes are probably not correct
+           PP[x] = zP[x];
+           GNGP_[x] = GNGPo * PP[x] + GNGCIo * iCI[x] + GNGPIo * iPI[x] + GNGO;
 
 
+            fs = 2.32;
 
+            //TODO: THis might need to move down the loop...
+            if(zdeltaFat < 1){
+                fs = 0.0;
+            }
 
+            TOTEE[x] = TEE[x];
 
+            eb[x] = iCI[x] + iFI[x] + iPI[x] - TOTEE[x];
 
+            EB[x] = eb[x];
 
+            aDL[x] = (iCI[x] + rGF * iFI[x] + iPI[x] - sigmak + omegak - (pRLe *rr + rFs)) / pRLe;
 
+            aDF[x] = (rFFA * iFI[x] + sigmak - (rFs * TOTEE[x])/(pRLe * rr + rFs)) / rFs;
 
+            aDP[x] = gLP * (1 - gW) * aDL[x] - gLP * gW * aDF[x];
 
+            Ep[x] = iPI[x]- GNGP_[x] - RoP * aDP[x];
 
+            Enp[x] = TOTEE[x] - Ep[x];
 
+            wfatOx[x] = (rFs * TOTEE[x]) /(pRLe * rr + rFs);
 
+            wcarbOx[x] = Enp[x] - wfatOx[x];
 
+            //TODO: check this shit
 
+            wOx_[0][x] = wcarbOx[x];
+            wOx_[1][x] = wfatOx[x];
+            wOx_[2][x] = Ep[x];
+
+            fF[x] = wOx_[1][x]/Enp[x];
+
+            //IBC already initialized and declared
+
+            //CHECK OBC ...
+
+            //CHECK RoB...
+
+            //THIS MIGHT NEED TO be +1 on the right half for all of these
+            if(x > 0){
+                EI[0][x] = iCI[x];
+                EI[1][x] = iFI[x];
+                EI[2][x] = iPI[x];
+
+                EE[0][x] = Enp[x];
+                EE[1][x] = Enp[x];
+                EE[2][x] = Ep[x];
+
+                ZBC[0][x] = -sigmak + omegak;
+                ZBC[1][x] = sigmak;
+                ZBC[2][x] = -GNGP_[x];
+
+            }
+
+        } //END OF DAY LOOPS
+
+        double [][] IBCxEI = helper.multiply(IBC,EI);
+        double[][] OBCxEE = helper.multiply(OBC,EE);
+
+       //S1 = helper.add(ZBC,helper.add(helper.multiply(IBC,EI),helper.multiply(OBC,EE)));
+        S1 = helper.add(helper.add(IBCxEI,OBCxEE),ZBC);
 
 
 
