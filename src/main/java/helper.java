@@ -72,6 +72,18 @@ public class helper {
     }
 
 
+    //Matrix Transposition to facilitate division of matrices
+    // return B = A^T
+    public static double[][] transpose(double[][] a) {
+        int m = a.length;
+        int n = a[0].length;
+        double[][] b = new double[n][m];
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                b[j][i] = a[i][j];
+        return b;
+    }
+
 
 
 

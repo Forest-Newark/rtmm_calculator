@@ -70,7 +70,7 @@ public class Main {
         final  double MFFA = 273;
 
         //molecular weight of glycepRLe g/mol
-        final  double MG = 98;
+        final  double MG = 92;
 
         //digestibility factors for carbohydrate
         final  double Digest_C= .95;
@@ -129,10 +129,10 @@ public class Main {
 
 
         double[] fatday1 = {64,148,232,316,330,353,371};
-        double[] fat1 = {9.05,4.34,3.06,6.86,9.58,11.38,13.73};
+        double[] fat1 = {9.05,4.34,3.08,6.86,9.58,11.38,13.73};
 
         double[] fatday = {0,64,148,232,316,330,353,371};
-        double[] fat = {9.05,9.05,4.34,3.06,6.86,9.58,11.38,13.73};
+        double[] fat = {9.05,9.05,4.34,3.08,6.86,9.58,11.38,13.73};
 
 
         double[] yfat1 = new double[308];
@@ -721,6 +721,78 @@ public class Main {
 
        //S1 = helper.add(ZBC,helper.add(helper.multiply(IBC,EI),helper.multiply(OBC,EE)));
         S1 = helper.add(helper.add(IBCxEI,OBCxEE),ZBC);
+
+        S2 = helper.multiply(helper.transpose(RoB),S1);
+
+
+        double[] zp = new double[371];
+        double[] zf = new double[371];
+
+
+        double[][] mBC = new double[3][371];
+        double[] ddF = new double[371];
+        double[] ddL = new double[371];
+        double[] yF = new double[371];
+        double[] mRR = new double[371];
+
+        double[][] XLF = new double[2][371];
+
+        for(int x = 0; x <days;x++){
+
+            DDL[x] = S2[0][0];
+            DDF[x] = S2[1][0];
+            DDP[x] = S2[2][0];
+
+            //TODO: These two are a little strange
+            zf[x] = S2[1][0] + F[x];
+            F[x] = zf[x];
+
+            zp[x]=S2[2][0] + P[x];
+            P[x] = zp[x];
+
+
+
+            //MEASURED BODY COMPOSITION (Looping through days)
+
+            mBC[0][x] = yleang[x];
+            mBC[1][x] = yfatg[x];
+            mBC[2][x] = P[x];
+
+            if(x == 0){
+                ddF[x] = 0;
+                ddL[x] = 0;
+                yF[x] = 0;
+            }
+
+            if(x > 0) {
+                ddF[0] = yfatg[x] - yfatg[x-1];
+                ddF[x] = yleang[x] - yleang[x-1];
+                yF[x] = yfatg[x-1];
+
+            }
+
+
+            mRR[x] = Abb * ((2 * yF[x] - ddF[x]) / (2 * yF[x]*yF[x]));
+
+            mR[x] = mRR[x];
+
+
+
+            //CANONIC REPRESENTATION
+
+            double alfa = 1;
+
+
+            if(Math.abs(ddL[x]) > 2) {
+                XLF[0][x] = ddL[x];
+                XLF[1][x] = ddF[x];
+
+            }
+
+
+
+        }
+
 
 
 
