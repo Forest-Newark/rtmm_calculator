@@ -85,6 +85,23 @@ public class helper {
     }
 
 
+    public static double[][] addValue(double[][] a,double number){
+
+        int m = a.length;
+        int n = a[0].length;
+        double[][] b = new double[n][m];
+        for(int row = 0; row < a.length;row++){
+            for (int col = 0 ; col < a[row].length;col++){
+                a[row][col] = a[row][col] + number;
+            }
+        }
+
+        return b;
+    }
+
+
+
+
 
 
 }

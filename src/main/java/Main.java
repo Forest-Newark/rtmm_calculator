@@ -594,7 +594,14 @@ public class Main {
          double Ok = Bbb;
          double [][] pTAck = {{Ack},{Ok}};
          double [][] aPAck = {{100,0},{0,1}};
-         double [][] pABk = {{RoL},{RoF}};
+
+
+        double[][] pABk = new double[2][371];
+        pABk[0][0] = RoL;
+        pABk[1][0] = RoF;
+
+
+
          double [][] aPABk = {{100,0},{0,1}};
          double [][] pPABk = {{100,0},{0,1}};
 
@@ -737,6 +744,8 @@ public class Main {
 
         double[][] XLF = new double[2][371];
 
+        double[][] aABk = new double[2][371];
+
         for(int x = 0; x <days;x++){
 
             DDL[x] = S2[0][0];
@@ -786,6 +795,16 @@ public class Main {
             if(Math.abs(ddL[x]) > 2) {
                 XLF[0][x] = ddL[x];
                 XLF[1][x] = ddF[x];
+
+                pABk[0][x] = pRLe;
+                pABk[1][x] = rFs;
+
+                aABk[0][x] = pABk[0][x];
+                aABk[1][x] = pABk[1][x];
+
+
+
+
 
             }
 
