@@ -592,7 +592,13 @@ public class Main {
          double omegak = 0;
          double Ack = Abb;
          double Ok = Bbb;
-         double [][] pTAck = {{Ack},{Ok}};
+
+         //double [][] pTAck = {{Ack},{Ok}};
+         double[][] pTAck = new double[2][371];
+         pTAck[0][0] = Ack;
+         pTAck[1][0] = Ok;
+
+
          double [][] aPAck = {{100,0},{0,1}};
 
 
@@ -746,6 +752,17 @@ public class Main {
 
         double[][] aABk = new double[2][371];
 
+        double[][] teta = new double [2][371];
+
+        double pRFe = 0.0;
+
+
+        double[][] Xk = new double[2][371];
+
+        double[][] aTAck = new double[2][371];
+
+
+
         for(int x = 0; x <days;x++){
 
             DDL[x] = S2[0][0];
@@ -801,6 +818,70 @@ public class Main {
 
                 aABk[0][x] = pABk[0][x];
                 aABk[1][x] = pABk[1][x];
+
+                //TODO: I don't know if the following should be in a loop...
+                //I am going to write it "loop" form but lets see
+                pPABk[0][x] = aPABk[0][x] + alfa * (XLF[0][x] * -(XLF[0][x]) - aPABk[0][x])/x;
+                pPABk[1][x] = aPABk[1][x] + alfa * (XLF[1][x] * -(XLF[1][x]) - aPABk[1][x])/x;
+
+                teta[0][x] = pPABk[0][x] / (XLF[0][x] * (eb[x] - (-aABk[0][x])) * XLF[0][x]);
+                teta[1][x] = pPABk[1][x] / (XLF[1][x] * (eb[x] - (-aABk[1][x])) * XLF[1][x]);
+
+                pABk[0][x] = aABk[0][x] + alfa * teta[0][x]/x;
+                pABk[1][x] = aABk[1][x] + alfa * teta[1][x]/x;
+
+                AAk[x] = pABk[0][0];
+                BBk[x] = pABk[1][0];
+
+                pRLe = pABk[0][0];
+                pRFe = pABk[1][0];
+
+                aPABk[0][x] = pPABk[0][x];
+                aPABk[1][x] = pPABk[1][x];
+            }
+
+            AAk[x] = pABk[0][0];
+            BBk[x] = pABk[1][0];
+            pRLe = pABk[0][0];
+            pRFe = pABk[1][0];
+            aPABk[0][x] = pPABk[0][x];
+            aPABk[1][x] = pPABk[1][x];
+
+
+
+
+
+
+            //TODO: This if statment is the same as the one above, can probobaly consolidate eventually
+
+            if(Math.abs(ddL[x]) > 2) {
+
+                //TODO: Not sure if the send row of this array is correct ..
+                Xk[0][x] = Math.log(yfatg[x]);
+                Xk[1][x] = 1;
+
+                aTAck[0][x] = pTAck[0][x];
+                aTAck[1][x] = pTAck[1][x];
+
+
+                //TODO: I am not sure if this is correct because of the Xk matrix
+                pPABk[0][x] = aPAck[0][x] + alfa * (Xk[0][x] * (-Xk[0][x]) - aPAck[0][x]) / x;
+                pPABk[1][x] = aPAck[1][x] + alfa * (Xk[1][x] * (-Xk[1][x]) - aPAck[1][x]) / x;
+
+
+                //TODO: Check the teta = pPAck / forumla
+
+                pTAck[0][x] = aTAck[0][x] + alfa * teta[0][x] / x;
+                pTAck[1][x] = aTAck[1][x] + alfa * teta[1][x] / x;
+
+                ACK[x] = pTAck[0][0];
+
+                //TODO: I cant do this formula aPAck = pPAck because of pPAck is not defined
+
+            }
+
+            ACK[x] = pTAck[0][0];
+            OK[x] = pTAck[1][0];
 
 
 
